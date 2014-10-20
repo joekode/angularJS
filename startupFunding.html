@@ -1,0 +1,119 @@
+<!doctype html>
+<html ng-app="playground">
+  <head>
+    <title>AngularJS playground</title>
+  </head>
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+  <style>
+    body {
+      text-align: center;
+      font-family: 'Open Sans', sans-serif;
+    }
+
+    .wrapper {
+      width: 60%;
+      margin: 0 auto;
+      text-align: left;
+    }
+
+    hr {
+      border-style: solid;
+      border-width: 0 0 1px;
+    }
+
+    form {
+      margin: 2em 0;
+    }
+  </style>
+  <body>
+  <div class="wrapper">
+    <h1>Form Inputs</h1>
+
+    <h2>#1 Setting UI state in the controller</h2>
+
+    <form ng-controller="SomeController">
+      <input type="checkbox" ng-model="youCheckedIt">
+    </form>
+
+    <hr>
+
+    <h2>#2 Watching for changes (naieve implemetation)</h2>
+
+    <form ng-controller="StartUpController">
+      Starting: <input ng-change="computeNeeded()" ng-model="funding.startingEstimate">
+      Reccomendation: {{funding.needed}}
+    </form>
+
+    <hr>
+
+    <h2>#3 Watching for changes (input + server)</h2>
+
+    <form ng-controller="StartUpController2">
+      Starting: <input ng-change="computeNeeded()" ng-model="funding.startingEstimate">
+      Reccomendation: {{funding.needed}}
+    </form>
+
+    <hr>
+
+    <h2>#4 Watching for changes (input + server) without ng-change attr</h2>
+
+    <form ng-controller="StartUpController2">
+      Starting: <input ng-model="funding.startingEstimate">
+      Reccomendation: {{funding.needed}}
+    </form>
+
+    <hr>
+
+    <h2>#5 Grouping Inputs</h2>
+    <!-- Page 18 in PDF -->
+    <form ng-submit="requestFunding()" ng-controller="StartUpController3">
+      Starting: <input ng-change="computeNeeded()" ng-model="funding.startingEstimate">
+      Reccomendation: {{needed}}
+      <button>Fund my startup!</button>
+    </form>
+
+    <hr>
+  </div>
+
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
+  <script>
+    var app = angular.module("playground", []);
+
+    // Setting state of UI in controller
+    app.controller("SomeController", function($scope) {
+      $scope.youCheckedIt = true;
+    });
+
+    // Watching for changes on input
+    app.controller("StartUpController", function($scope) {
+      $scope.funding = { startingEstimate: 0 };
+      
+      $scope.computeNeeded = function() {
+        $scope.funding.needed = $scope.funding.startingEstimate * 10;
+      };
+    });
+
+    // Watching for changes on input & possibly server
+    app.controller("StartUpController2", function($scope) {
+      $scope.funding = { startingEstimate: 0 };
+      
+      computeNeeded = function() {
+        $scope.funding.needed = $scope.funding.startingEstimate * 10;
+      };
+
+      $scope.$watch('funding.startingEstimate', computeNeeded);
+    });
+
+    app.controller("StartUpController3", function($scope) {
+      $scope.computeNeeded = function() {
+        $scope.needed = $scope.funding.startingEstimate * 10;
+      };
+
+      $scope.requestFunding = function() {
+        window.alert("Sorry, please get more customers first.");
+      };
+    });
+
+  </script>
+  </body>
+</html>
