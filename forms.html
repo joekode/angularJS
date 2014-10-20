@@ -73,6 +73,17 @@
     </form>
 
     <hr>
+
+    <h2>#6 Grouping Inputs</h2>
+    <!-- Page 18 in PDF -->
+    <form ng-controller="StartUpController3">
+      Starting: <input ng-change="computeNeeded()" ng-model="funding.startingEstimate">
+      Recommendation: {{needed}}
+      <button ng-click="requestFunding()">Fund my startup!</button>
+      <button ng-click="reset()">Reset</button>
+    </form>
+
+    <hr>
   </div>
 
   <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
@@ -111,6 +122,10 @@
 
       $scope.requestFunding = function() {
         window.alert("Sorry, please get more customers first.");
+      };
+
+      $scope.reset = function() {
+        $scope.funding.startingEstimate = 0;
       };
     });
 
